@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.overonix.nominatim.repository.CoordinatesRepository">
+
+    <resultMap id="addressInfoResultMap" type="com.overonix.nominatim.entity.AddressInfoStored">
+        <result property="lat" column="lat"/>
+        <result property="lon" column="lon"/>
+        <result property="display_name" column="display_name"/>
+        <result property="address" column="address" jdbcType="OTHER"  typeHandler="com.overonix.nominatim.utils.CustomJSONTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="coordinatesMapResult" type="com.overonix.nominatim.entity.CoordinatesHolder">
+        <result property="lat" column="lat"/>
+        <result property="lon" column="lon"/>
+    </resultMap>
+
+
+    <insert id="saveCoordinates" useGeneratedKeys="true">
+        INSERT INTO coordinates (lat, lon, display_name, address)
+        VALUES (#{pojo.lat},
+                #{pojo.lon},
+                #{pojo.display_name},
+                #{pojo.address, jdbcType=OTHER, typeHandler=com.overonix.nominatim.utils.CustomJSONTypeHandler})
+        ON CONFLICT (lat,lon) DO UPDATE
+            SET display_name = EXCLUDED.display_name,
+                address      = EXCLUDED.address;
+    </insert>
+
+    <select id="getCoordinates" resultMap="coordinatesMapResult" resultType="list">
+        select lat, lon
+        from coordinates
+    </select>
+
+    <select id="getAddressByCoordinates"  resultType="object">
+        SELECT address FROM coordinates
+        WHERE lat = #{lat}
+        AND lon = #{lon}
+    </select>
+
+</mapper>

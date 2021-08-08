@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <mappers>
+        <mapper resource="com/overonix/nominatim/repository/CoordinatesRepository.xml"/>
+    </mappers>
+</configuration>
+        &street=18,Úhelnice&city=Mladá Boleslav&countrycode=cz&format=json&accept-language=en-US
