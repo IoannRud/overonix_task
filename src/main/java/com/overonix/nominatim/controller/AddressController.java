@@ -19,13 +19,6 @@ public class AddressController {
         return addressService.saveCoordinates(address);
     }
 
-    /*@GetMapping("/street/{street}/city/{city}/country/{country}")
-    public String getAllAddressesByCoordinates(@PathVariable String street,
-                                               @PathVariable String city,
-                                               @PathVariable String country) throws JsonProcessingException {
-        return addressService.parseAddressesFromJSON(city, street, country);
-    }*/
-
     @GetMapping("/all")
     public List<Object> getAllAddressesByRepositoryCoordinates() {
         return addressService.getAllAddressesByRepositoryCoordinates();

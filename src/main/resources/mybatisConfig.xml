@@ -8,4 +8,3 @@
         <mapper resource="com/overonix/nominatim/repository/CoordinatesRepository.xml"/>
     </mappers>
 </configuration>
-        &street=18,Úhelnice&city=Mladá Boleslav&countrycode=cz&format=json&accept-language=en-US

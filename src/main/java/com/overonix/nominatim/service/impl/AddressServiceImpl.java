@@ -1,7 +1,6 @@
 package com.overonix.nominatim.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overonix.nominatim.entity.Address;
 import com.overonix.nominatim.entity.AddressInfoStored;
 import com.overonix.nominatim.entity.CoordinatesHolder;
@@ -9,7 +8,6 @@ import com.overonix.nominatim.repository.CoordinatesRepository;
 import com.overonix.nominatim.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,8 @@ public class AddressServiceImpl implements AddressService {
     @Cacheable(cacheNames = "getAddressByCoordinates")
     public Object getAddressByCoordinates(String lat, String lon) {
         log.info("If it's not visible after sending get request, this means coordinate with lat {} and lon {} were loaded from cache", lat, lon);
-        return coordinatesRepository.getAddressByCoordinates(lat, lon);
+        return Optional.ofNullable(coordinatesRepository.getAddressByCoordinates(lat, lon))
+                .orElse("Coordinates not found");
     }
 
     @Override
@@ -70,22 +69,4 @@ public class AddressServiceImpl implements AddressService {
         }
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
-
-   /* @Override
-    public String parseAddressesFromJSON(String city, String street, String country) {
-        try {
-            final String uri = String.format("https://nominatim.openstreetmap.org/search?city=%s&street=%s&country=%s&format=json&addressdetails=1&accept-language=en-US", city, street, country);
-            AddressInfoStored[] readValue = restTemplate.getForObject(uri, AddressInfoStored[].class);
-            if (readValue != null) {
-                Arrays.stream(readValue)
-                        .filter(addressInfo -> addressInfo.getLat() != null
-                                && addressInfo.getLon() != null)
-                        .forEach(coordinatesRepository::saveCoordinates);
-            }
-        } catch (Exception e) {
-            log.error("Error while parsing json.", e);
-            return "Error:"+e.getMessage();
-        }
-        return "saved";
-    }*/
 }
